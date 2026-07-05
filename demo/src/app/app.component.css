@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at top left, rgba(14, 116, 144, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.18), transparent 24%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  color: #0f172a;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: end;
+  margin-bottom: 2rem;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 40rem;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.hero-copy p {
+  margin: 0;
+  color: #334155;
+  font-size: 1.05rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.sidebar {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.card-header.compact {
+  padding-bottom: 0;
+}
+
+.card-header h2,
+.card-header h3,
+.card-header small {
+  margin: 0;
+}
+
+.card-header h2,
+.card-header h3 {
+  font-size: 1.15rem;
+}
+
+.card-header small {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.feature-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  color: #334155;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+pre {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  overflow: auto;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 960px) {
+  .shell {
+    padding: 1rem;
+  }
+
+  .hero,
+  .footer-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .showcase-grid {
+    grid-template-columns: 1fr;
+  }
+}

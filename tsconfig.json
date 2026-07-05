@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "paths": {
+      "primeng-forms-utils": [
+        "./src/public-api.ts"
+      ]
+    },
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "skipLibCheck": true,
+    "strict": true,
+    "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial",
+    "strictTemplates": true
+  }
+}

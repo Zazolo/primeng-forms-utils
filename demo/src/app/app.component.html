@@ -1,0 +1,94 @@
+<main class="shell">
+  <section class="hero">
+    <div class="hero-copy">
+      <p-tag severity="contrast" value="Demo Angular + PrimeNG"></p-tag>
+      <h1>Showcase do `pfu-dynamic-form`</h1>
+      <p>
+        App de referencia para validar rendering, layout responsivo e formato do
+        payload gerado pela biblioteca local.
+      </p>
+    </div>
+
+    <div class="hero-actions">
+      <button pButton type="button" label="Aplicar preset" (click)="applyPreset()"></button>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        label="Limpar"
+        (click)="clearForm()"
+      ></button>
+      <button pButton type="button" severity="contrast" label="Salvar demo" (click)="submit()"></button>
+    </div>
+  </section>
+
+  <section class="showcase-grid">
+    <p-card class="form-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <div>
+            <small>Formulario configurado por TypeScript</small>
+            <h2>Cadastro de iniciativa</h2>
+          </div>
+          <p-tag severity="success" value="12 campos"></p-tag>
+        </div>
+      </ng-template>
+
+      <pfu-dynamic-form
+        [form]="form"
+        [fields]="fields"
+        [errorTranslations]="errorTranslations"
+      />
+
+      <p-divider></p-divider>
+
+      <div class="footer-actions">
+        <span>O submit continua externo, como esperado pela biblioteca.</span>
+        <button pButton type="button" label="Executar submit" (click)="submit()"></button>
+      </div>
+    </p-card>
+
+    <aside class="sidebar">
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="card-header compact">
+            <div>
+              <small>O que validar</small>
+              <h3>Checklist visual</h3>
+            </div>
+          </div>
+        </ng-template>
+
+        <ul class="feature-list">
+          <li *ngFor="let item of featureItems">{{ item }}</li>
+        </ul>
+      </p-card>
+
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="card-header compact">
+            <div>
+              <small>Payload atual</small>
+              <h3>FormGroup em tempo real</h3>
+            </div>
+          </div>
+        </ng-template>
+
+        <pre>{{ livePayload() | json }}</pre>
+      </p-card>
+
+      <p-card *ngIf="submittedPayload() as payload">
+        <ng-template pTemplate="header">
+          <div class="card-header compact">
+            <div>
+              <small>Ultimo submit valido</small>
+              <h3>Snapshot salvo</h3>
+            </div>
+          </div>
+        </ng-template>
+
+        <pre>{{ payload | json }}</pre>
+      </p-card>
+    </aside>
+  </section>
+</main>
