@@ -14,10 +14,10 @@
   "type": "module",
   "main": "./dist/fesm2022/primeng-forms-utils.mjs",
   "module": "./dist/fesm2022/primeng-forms-utils.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/primeng-forms-utils.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/primeng-forms-utils.d.ts",
       "default": "./dist/fesm2022/primeng-forms-utils.mjs"
     }
   },
@@ -37,6 +37,7 @@
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/forms": "^21.0.0",
+    "@angular/router": "^21.0.0",
     "primeng": "^21.0.0"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,36 +6,45 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  SimpleChanges
-} from '@angular/core';
-import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DatePickerModule } from 'primeng/datepicker';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputTextModule } from 'primeng/inputtext';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { SelectModule } from 'primeng/select';
-import { TextareaModule } from 'primeng/textarea';
-import { TooltipModule } from 'primeng/tooltip';
+  SimpleChanges,
+} from "@angular/core";
+import {
+  AbstractControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from "@angular/forms";
+import { Subscription } from "rxjs";
+import { CheckboxModule } from "primeng/checkbox";
+import { DatePickerModule } from "primeng/datepicker";
+import { InputNumberModule } from "primeng/inputnumber";
+import { InputTextModule } from "primeng/inputtext";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { SelectModule } from "primeng/select";
+import { TextareaModule } from "primeng/textarea";
+import { TooltipModule } from "primeng/tooltip";
 import {
   DynamicErrorTranslations,
   DynamicFieldAppearanceConfig,
+  DynamicFieldColSpan,
   DynamicFieldConfig,
-  DynamicFieldOption
-} from '../models/dynamic-field-config';
+  DynamicFieldOption,
+} from "../models/dynamic-field-config";
 import {
   defaultDynamicErrorTranslations,
-  resolveErrorMessage
-} from '../utils/error-message.utils';
-import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils';
+  resolveErrorMessage,
+} from "../utils/error-message.utils";
+import {
+  parseUtcDateValue,
+  toUtcStartOfDayIso,
+} from "../utils/date-value.utils";
 
 @Component({
-  selector: 'pfu-dynamic-field',
+  selector: "pfu-dynamic-field",
   standalone: true,
   host: {
-    class: 'pfu-dynamic-field-host',
-    style: 'display: contents;'
+    class: "pfu-dynamic-field-host",
+    style: "display: contents;",
   },
   imports: [
     CommonModule,
@@ -48,18 +57,21 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
     RadioButtonModule,
     SelectModule,
     TextareaModule,
-    TooltipModule
+    TooltipModule,
   ],
   template: `
     <div
       [ngClass]="fieldClassList"
       [ngStyle]="appearanceStyleVars"
+      [style.--pfu-field-column-span]="columnSpan"
       [formGroup]="form"
       *ngIf="!field.hidden"
     >
       <div class="pfu-label-wrapper" *ngIf="showPrimaryLabel">
         <label class="pfu-label" [attr.for]="field.inputId ?? field.name">
-          <span class="pfu-required-mark" *ngIf="isRequired" aria-hidden="true">*</span>
+          <span class="pfu-required-mark" *ngIf="isRequired" aria-hidden="true"
+            >*</span
+          >
           <span>{{ field.label }}</span>
         </label>
         <button
@@ -82,6 +94,7 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
             [id]="field.inputId ?? field.name"
             [formControlName]="field.name"
             [placeholder]="field.placeholder ?? ''"
+            [type]="field.inputType ?? 'text'"
             [readOnly]="field.readonly ?? false"
           />
 
@@ -153,7 +166,7 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
             optionValue="value"
           >
             <ng-template pTemplate="selectedItem" let-selectedOption>
-              <div class="pfu-option" *ngIf="selectedOption; else emptyEnumValue">
+              <div class="pfu-option" *ngIf="selectedOption">
                 <span
                   *ngIf="showEnumIcons && selectedOption.icon"
                   [class]="selectedOption.icon"
@@ -161,6 +174,9 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
                 ></span>
                 <span>{{ selectedOption.label }}</span>
               </div>
+              <span class="pfu-placeholder" *ngIf="!selectedOption">
+                {{ field.placeholder ?? "Selecione" }}
+              </span>
             </ng-template>
 
             <ng-template pTemplate="item" let-option>
@@ -175,29 +191,35 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
             </ng-template>
           </p-select>
 
-          <ng-template #emptyEnumValue>
-            <span class="pfu-placeholder">{{ field.placeholder ?? 'Selecione' }}</span>
-          </ng-template>
-
           <p-datepicker
             *ngSwitchCase="'date'"
             [inputId]="field.inputId ?? field.name"
             [ngModel]="dateInputValue"
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onDateSelected($event)"
-            [placeholder]="field.dateConfig?.placeholder ?? field.placeholder ?? ''"
+            [placeholder]="
+              field.dateConfig?.placeholder ?? field.placeholder ?? ''
+            "
             [dateFormat]="field.dateConfig?.dateFormat ?? 'dd/mm/yy'"
             [showIcon]="field.dateConfig?.showIcon ?? true"
           />
 
           <div [ngClass]="optionGroupClassList" *ngSwitchCase="'radio'">
-            <div class="pfu-choice-item" *ngFor="let option of field.options ?? []; let optionIndex = index">
+            <div
+              class="pfu-choice-item"
+              *ngFor="
+                let option of field.options ?? [];
+                let optionIndex = index
+              "
+            >
               <p-radioButton
                 [inputId]="resolveOptionInputId(optionIndex)"
                 [formControlName]="field.name"
                 [value]="option.value"
               />
-              <label [attr.for]="resolveOptionInputId(optionIndex)">{{ option.label }}</label>
+              <label [attr.for]="resolveOptionInputId(optionIndex)">{{
+                option.label
+              }}</label>
             </div>
           </div>
 
@@ -206,25 +228,29 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
               [ngClass]="[
                 'pfu-image-preview',
                 imageVariantClass,
-                previewSource ? 'pfu-image-preview-filled' : 'pfu-image-preview-empty'
+                previewSource
+                  ? 'pfu-image-preview-filled'
+                  : 'pfu-image-preview-empty',
               ]"
             >
               <img
-                *ngIf="previewSource; else emptyImagePreview"
+                *ngIf="previewSource"
                 [src]="previewSource"
                 [alt]="field.label"
                 class="pfu-image-preview-media"
               />
+              <span class="pfu-image-preview-text" *ngIf="!previewSource">
+                {{
+                  field.imageConfig?.emptyLabel ?? "Nenhuma imagem selecionada"
+                }}
+              </span>
             </div>
 
-            <ng-template #emptyImagePreview>
-              <span class="pfu-image-preview-text">
-                {{ field.imageConfig?.emptyLabel ?? 'Nenhuma imagem selecionada' }}
-              </span>
-            </ng-template>
-
-            <label class="pfu-image-upload-button" [attr.for]="field.inputId ?? field.name">
-              {{ field.imageConfig?.changeLabel ?? 'Selecionar imagem' }}
+            <label
+              class="pfu-image-upload-button"
+              [attr.for]="field.inputId ?? field.name"
+            >
+              {{ field.imageConfig?.changeLabel ?? "Selecionar imagem" }}
             </label>
 
             <input
@@ -237,9 +263,18 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
             />
           </div>
 
-          <div [ngClass]="isCheckboxGroup ? optionGroupClassList : 'pfu-checkbox'" *ngSwitchCase="'checkbox'">
-            <ng-container *ngIf="isCheckboxGroup; else binaryCheckboxTemplate">
-              <div class="pfu-choice-item" *ngFor="let option of field.options ?? []; let optionIndex = index">
+          <div
+            [ngClass]="isCheckboxGroup ? optionGroupClassList : 'pfu-checkbox'"
+            *ngSwitchCase="'checkbox'"
+          >
+            <ng-container *ngIf="isCheckboxGroup">
+              <div
+                class="pfu-choice-item"
+                *ngFor="
+                  let option of field.options ?? [];
+                  let optionIndex = index
+                "
+              >
                 <p-checkbox
                   [inputId]="resolveOptionInputId(optionIndex)"
                   [value]="option.value"
@@ -248,18 +283,25 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
                   [ngModelOptions]="{ standalone: true }"
                   (ngModelChange)="onCheckboxGroupModelChange($event)"
                 />
-                <label [attr.for]="resolveOptionInputId(optionIndex)">{{ option.label }}</label>
+                <label [attr.for]="resolveOptionInputId(optionIndex)">{{
+                  option.label
+                }}</label>
               </div>
             </ng-container>
 
-            <ng-template #binaryCheckboxTemplate>
+            <ng-container *ngIf="!isCheckboxGroup">
               <p-checkbox
                 [inputId]="field.inputId ?? field.name"
                 [formControlName]="field.name"
                 [binary]="true"
               />
               <label [attr.for]="field.inputId ?? field.name">
-                <span class="pfu-required-mark" *ngIf="isRequired" aria-hidden="true">*</span>
+                <span
+                  class="pfu-required-mark"
+                  *ngIf="isRequired"
+                  aria-hidden="true"
+                  >*</span
+                >
                 <span>{{ field.placeholder ?? field.label }}</span>
               </label>
               <button
@@ -272,7 +314,7 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
               >
                 <span class="pi pi-info-circle" aria-hidden="true"></span>
               </button>
-            </ng-template>
+            </ng-container>
           </div>
         </ng-container>
 
@@ -287,6 +329,32 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
+      }
+
+      .pfu-field {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        min-width: 0;
+        grid-column: span var(--pfu-field-column-span, 6);
+      }
+
+      .pfu-field-top {
+        flex-direction: column;
+      }
+
+      .pfu-field-side {
+        flex-direction: row;
+      }
+
+      @media (max-width: 767px) {
+        .pfu-field {
+          grid-column: span 12;
+        }
+
+        .pfu-field-side {
+          flex-direction: column;
+        }
       }
 
       .pfu-field-side .pfu-label-wrapper {
@@ -440,14 +508,15 @@ import { parseUtcDateValue, toUtcStartOfDayIso } from '../utils/date-value.utils
       .pfu-error {
         color: #b91c1c;
       }
-    `
+    `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicFieldComponent implements OnDestroy {
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) field!: DynamicFieldConfig;
-  @Input() errorTranslations: DynamicErrorTranslations = defaultDynamicErrorTranslations;
+  @Input() errorTranslations: DynamicErrorTranslations =
+    defaultDynamicErrorTranslations;
 
   private readonly objectUrlByFieldName = new Map<string, string>();
   private controlSubscription?: Subscription;
@@ -461,31 +530,27 @@ export class DynamicFieldComponent implements OnDestroy {
   constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['field']) {
+    if (changes["field"]) {
       this.cachedFieldClassList = [
-      'pfu-field',
-      'col-span-12',
-      this.colSpanClass,
-      'flex',
-      this.isSideLabel ? 'pfu-field-side' : 'pfu-field-top',
-      this.isSideLabel ? 'flex-row' : 'flex-col',
-      'items-start',
-      'gap-2',
-      ...(this.field.cssClass ? [this.field.cssClass] : [])
+        "pfu-field",
+        this.isSideLabel ? "pfu-field-side" : "pfu-field-top",
+        ...(this.field.cssClass ? [this.field.cssClass] : []),
       ];
 
       this.cachedOptionGroupClassList = [
-        'pfu-choice-group',
-        this.field.optionLayout === 'horizontal'
-          ? 'pfu-choice-group-horizontal'
-          : 'pfu-choice-group-vertical'
+        "pfu-choice-group",
+        this.field.optionLayout === "horizontal"
+          ? "pfu-choice-group-horizontal"
+          : "pfu-choice-group-vertical",
       ];
 
       this.cachedEnumOptions = this.buildEnumOptions();
-      this.cachedAppearanceStyleVars = this.buildAppearanceStyleVars(this.field.appearance);
+      this.cachedAppearanceStyleVars = this.buildAppearanceStyleVars(
+        this.field.appearance,
+      );
     }
 
-    if (changes['form'] || changes['field']) {
+    if (changes["form"] || changes["field"]) {
       this.bindControl();
       this.refreshControlDerivedState();
     }
@@ -496,23 +561,29 @@ export class DynamicFieldComponent implements OnDestroy {
   }
 
   get isSideLabel(): boolean {
-    return this.field.labelPosition === 'side';
+    return this.field.labelPosition === "side";
   }
 
-  get colSpanClass(): string {
-    return COL_SPAN_CLASS_MAP[this.field.colSpan ?? 6];
+  get columnSpan(): DynamicFieldColSpan {
+    return this.field.colSpan ?? 6;
   }
 
   get isRequired(): boolean {
-    return this.field.validators?.some((validator) => validator.type === 'required') ?? false;
+    return (
+      this.field.validators?.some(
+        (validator) => validator.type === "required",
+      ) ?? false
+    );
   }
 
   get showPrimaryLabel(): boolean {
-    return this.field.type !== 'checkbox' || this.isCheckboxGroup;
+    return this.field.type !== "checkbox" || this.isCheckboxGroup;
   }
 
   get isCheckboxGroup(): boolean {
-    return this.field.type === 'checkbox' && Boolean(this.field.options?.length);
+    return (
+      this.field.type === "checkbox" && Boolean(this.field.options?.length)
+    );
   }
 
   get optionGroupClassList(): string[] {
@@ -526,7 +597,11 @@ export class DynamicFieldComponent implements OnDestroy {
       return null;
     }
 
-    return resolveErrorMessage(this.field, control.errors, this.errorTranslations);
+    return resolveErrorMessage(
+      this.field,
+      control.errors,
+      this.errorTranslations,
+    );
   }
 
   get enumOptions(): Array<DynamicFieldOption & { icon?: string }> {
@@ -538,7 +613,9 @@ export class DynamicFieldComponent implements OnDestroy {
   }
 
   get showEnumIcons(): boolean {
-    return this.field.type === 'enum' && Boolean(this.field.enumConfig?.showIcons);
+    return (
+      this.field.type === "enum" && Boolean(this.field.enumConfig?.showIcons)
+    );
   }
 
   get previewSource(): string | null {
@@ -546,17 +623,17 @@ export class DynamicFieldComponent implements OnDestroy {
   }
 
   get imageVariantClass(): string {
-    return this.field.imageConfig?.variant === 'avatar'
-      ? 'pfu-image-preview-avatar'
-      : 'pfu-image-preview-square';
+    return this.field.imageConfig?.variant === "avatar"
+      ? "pfu-image-preview-avatar"
+      : "pfu-image-preview-square";
   }
 
   get dateInputValue(): Date | null {
     return this.cachedDateInputValue;
   }
 
-  get resolvedMoneyMode(): 'currency' | 'decimal' {
-    return this.field.moneyConfig?.mode ?? 'currency';
+  get resolvedMoneyMode(): "currency" | "decimal" {
+    return this.field.moneyConfig?.mode ?? "currency";
   }
 
   get checkboxGroupValue(): unknown[] {
@@ -629,13 +706,13 @@ export class DynamicFieldComponent implements OnDestroy {
   private refreshControlDerivedState(): void {
     const controlValue = this.resolveControl()?.value;
 
-    if (this.field.type === 'image') {
+    if (this.field.type === "image") {
       this.cachedPreviewSource = this.resolvePreviewSource(controlValue);
     } else {
       this.cachedPreviewSource = null;
     }
 
-    if (this.field.type === 'date') {
+    if (this.field.type === "date") {
       this.cachedDateInputValue = parseUtcDateValue(controlValue);
     } else {
       this.cachedDateInputValue = null;
@@ -645,22 +722,26 @@ export class DynamicFieldComponent implements OnDestroy {
   }
 
   private buildEnumOptions(): Array<DynamicFieldOption & { icon?: string }> {
-    if (this.field.type !== 'enum' || !this.field.enumConfig) {
+    if (this.field.type !== "enum" || !this.field.enumConfig) {
       return [];
     }
 
-    const enumEntries = new Set(this.resolveEnumValues(this.field.enumConfig.values));
+    const enumEntries = new Set(
+      this.resolveEnumValues(this.field.enumConfig.values),
+    );
 
     return this.field.enumConfig.options
       .filter((option) => enumEntries.has(option.enumValue))
       .map((option) => ({
         label: option.label,
         value: option.enumValue,
-        icon: option.icon
+        icon: option.icon,
       }));
   }
 
-  private buildAppearanceStyleVars(appearance?: DynamicFieldAppearanceConfig): Record<string, string> {
+  private buildAppearanceStyleVars(
+    appearance?: DynamicFieldAppearanceConfig,
+  ): Record<string, string> {
     if (!appearance) {
       return {};
     }
@@ -668,51 +749,51 @@ export class DynamicFieldComponent implements OnDestroy {
     const styleVars: Record<string, string> = {};
 
     this.assignAppearanceVar(styleVars, appearance.borderColor, [
-      '--p-inputtext-border-color',
-      '--p-textarea-border-color',
-      '--p-select-border-color'
+      "--p-inputtext-border-color",
+      "--p-textarea-border-color",
+      "--p-select-border-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.hoverBorderColor, [
-      '--p-inputtext-hover-border-color',
-      '--p-textarea-hover-border-color',
-      '--p-select-hover-border-color'
+      "--p-inputtext-hover-border-color",
+      "--p-textarea-hover-border-color",
+      "--p-select-hover-border-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.focusBorderColor, [
-      '--p-inputtext-focus-border-color',
-      '--p-textarea-focus-border-color',
-      '--p-select-focus-border-color'
+      "--p-inputtext-focus-border-color",
+      "--p-textarea-focus-border-color",
+      "--p-select-focus-border-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.invalidBorderColor, [
-      '--p-inputtext-invalid-border-color',
-      '--p-textarea-invalid-border-color',
-      '--p-select-invalid-border-color'
+      "--p-inputtext-invalid-border-color",
+      "--p-textarea-invalid-border-color",
+      "--p-select-invalid-border-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.backgroundColor, [
-      '--p-inputtext-background',
-      '--p-textarea-background',
-      '--p-select-background'
+      "--p-inputtext-background",
+      "--p-textarea-background",
+      "--p-select-background",
     ]);
     this.assignAppearanceVar(styleVars, appearance.textColor, [
-      '--p-inputtext-color',
-      '--p-textarea-color',
-      '--p-select-color'
+      "--p-inputtext-color",
+      "--p-textarea-color",
+      "--p-select-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.placeholderColor, [
-      '--p-inputtext-placeholder-color',
-      '--p-textarea-placeholder-color',
-      '--p-select-placeholder-color'
+      "--p-inputtext-placeholder-color",
+      "--p-textarea-placeholder-color",
+      "--p-select-placeholder-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.focusRingColor, [
-      '--p-inputtext-focus-ring-color',
-      '--p-textarea-focus-ring-color',
-      '--p-select-focus-ring-color',
-      '--p-checkbox-focus-ring-color',
-      '--p-radiobutton-focus-ring-color'
+      "--p-inputtext-focus-ring-color",
+      "--p-textarea-focus-ring-color",
+      "--p-select-focus-ring-color",
+      "--p-checkbox-focus-ring-color",
+      "--p-radiobutton-focus-ring-color",
     ]);
     this.assignAppearanceVar(styleVars, appearance.borderRadius, [
-      '--p-inputtext-border-radius',
-      '--p-textarea-border-radius',
-      '--p-select-border-radius'
+      "--p-inputtext-border-radius",
+      "--p-textarea-border-radius",
+      "--p-select-border-radius",
     ]);
 
     return styleVars;
@@ -721,7 +802,7 @@ export class DynamicFieldComponent implements OnDestroy {
   private assignAppearanceVar(
     styleVars: Record<string, string>,
     value: string | undefined,
-    variableNames: string[]
+    variableNames: string[],
   ): void {
     if (!value) {
       return;
@@ -733,7 +814,7 @@ export class DynamicFieldComponent implements OnDestroy {
   }
 
   private resolvePreviewSource(controlValue: unknown): string | null {
-    if (typeof controlValue === 'string' && controlValue) {
+    if (typeof controlValue === "string" && controlValue) {
       return controlValue;
     }
 
@@ -752,11 +833,13 @@ export class DynamicFieldComponent implements OnDestroy {
     return this.form?.get(this.field.name) ?? null;
   }
 
-  private resolveEnumValues(enumValues: Record<string, string | number>): Array<string | number> {
+  private resolveEnumValues(
+    enumValues: Record<string, string | number>,
+  ): Array<string | number> {
     const values = Object.values(enumValues);
 
     return values.filter((value) => {
-      if (typeof value === 'number') {
+      if (typeof value === "number") {
         return true;
       }
 
@@ -769,10 +852,12 @@ export class DynamicFieldComponent implements OnDestroy {
   }
 
   private isPreviewObject(value: unknown): value is { previewUrl: string } {
-    return typeof value === 'object'
-      && value !== null
-      && 'previewUrl' in value
-      && typeof (value as { previewUrl?: unknown }).previewUrl === 'string';
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "previewUrl" in value &&
+      typeof (value as { previewUrl?: unknown }).previewUrl === "string"
+    );
   }
 
   private ensureObjectUrl(fieldName: string, file: File): string | null {
@@ -781,7 +866,10 @@ export class DynamicFieldComponent implements OnDestroy {
       return existingUrl;
     }
 
-    if (typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') {
+    if (
+      typeof URL === "undefined" ||
+      typeof URL.createObjectURL !== "function"
+    ) {
       return null;
     }
 
@@ -792,7 +880,11 @@ export class DynamicFieldComponent implements OnDestroy {
 
   private revokeObjectUrl(fieldName: string): void {
     const objectUrl = this.objectUrlByFieldName.get(fieldName);
-    if (!objectUrl || typeof URL === 'undefined' || typeof URL.revokeObjectURL !== 'function') {
+    if (
+      !objectUrl ||
+      typeof URL === "undefined" ||
+      typeof URL.revokeObjectURL !== "function"
+    ) {
       return;
     }
 
@@ -800,18 +892,3 @@ export class DynamicFieldComponent implements OnDestroy {
     this.objectUrlByFieldName.delete(fieldName);
   }
 }
-
-const COL_SPAN_CLASS_MAP: Record<number, string> = {
-  1: 'md:col-span-1',
-  2: 'md:col-span-2',
-  3: 'md:col-span-3',
-  4: 'md:col-span-4',
-  5: 'md:col-span-5',
-  6: 'md:col-span-6',
-  7: 'md:col-span-7',
-  8: 'md:col-span-8',
-  9: 'md:col-span-9',
-  10: 'md:col-span-10',
-  11: 'md:col-span-11',
-  12: 'md:col-span-12'
-};

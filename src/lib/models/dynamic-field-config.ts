@@ -1,31 +1,30 @@
-import { AbstractControlOptions, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControlOptions,
+  ValidationErrors,
+  ValidatorFn,
+} from "@angular/forms";
 
 export type DynamicFieldType =
-  | 'text'
-  | 'number'
-  | 'money'
-  | 'percent'
-  | 'textarea'
-  | 'select'
-  | 'enum'
-  | 'image'
-  | 'date'
-  | 'radio'
-  | 'checkbox';
+  | "text"
+  | "number"
+  | "money"
+  | "percent"
+  | "textarea"
+  | "select"
+  | "enum"
+  | "image"
+  | "date"
+  | "radio"
+  | "checkbox";
 
-export type DynamicOptionLayout = 'vertical' | 'horizontal';
+export type DynamicOptionLayout = "vertical" | "horizontal";
 
 export type DynamicValidatorType =
-  | 'required'
-  | 'email'
-  | 'min'
-  | 'max'
-  | 'minLength'
-  | 'maxLength'
-  | 'pattern';
+  "required" | "email" | "min" | "max" | "minLength" | "maxLength" | "pattern";
 
-export type DynamicLabelPosition = 'top' | 'side';
-export type DynamicFieldColSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type DynamicLabelPosition = "top" | "side";
+export type DynamicFieldColSpan =
+  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export interface DynamicFieldOption {
   label: string;
@@ -44,7 +43,7 @@ export interface DynamicEnumConfig {
   options: DynamicEnumOptionConfig[];
 }
 
-export type DynamicImageVariant = 'square' | 'avatar';
+export type DynamicImageVariant = "square" | "avatar";
 
 export interface DynamicImageConfig {
   variant: DynamicImageVariant;
@@ -56,8 +55,8 @@ export interface DynamicImageConfig {
 export interface DynamicMoneyConfig {
   currency?: string;
   locale?: string;
-  mode?: 'currency' | 'decimal';
-  currencyDisplay?: 'symbol' | 'code' | 'name';
+  mode?: "currency" | "decimal";
+  currencyDisplay?: "symbol" | "code" | "name";
   minFractionDigits?: number;
   maxFractionDigits?: number;
   prefix?: string;
@@ -75,7 +74,7 @@ export interface DynamicDateConfig {
   dateFormat?: string;
   placeholder?: string;
   showIcon?: boolean;
-  utcMode?: 'startOfDay';
+  utcMode?: "startOfDay";
 }
 
 export interface DynamicFieldAppearanceConfig {
@@ -104,18 +103,22 @@ export interface DynamicErrorMessageContext {
 }
 
 export type DynamicErrorTranslationValue =
-  | string
-  | ((context: DynamicErrorMessageContext) => string);
+  string | ((context: DynamicErrorMessageContext) => string);
 
-export type DynamicErrorTranslations = Record<string, DynamicErrorTranslationValue>;
+export type DynamicErrorTranslations = Record<
+  string,
+  DynamicErrorTranslationValue
+>;
 
 export interface DynamicFieldConfig {
   name: string;
   type: DynamicFieldType;
   label: string;
+  /** Quantidade de colunas ocupadas no grid de 12 colunas. O padrão é 6 (50%). */
   colSpan?: DynamicFieldColSpan;
   labelPosition?: DynamicLabelPosition;
   placeholder?: string;
+  inputType?: "text" | "password" | "email" | "search";
   hint?: string;
   quickHint?: string;
   initialValue?: unknown;

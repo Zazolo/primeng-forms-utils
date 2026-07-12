@@ -2,8 +2,8 @@ import { DOCUMENT } from '@angular/common';
 import {
   Directive,
   ElementRef,
+  Inject,
   Input,
-  inject,
   OnChanges,
   OnDestroy,
   Renderer2,
@@ -17,7 +17,7 @@ import {
 export class LoadingDirective implements OnChanges, OnDestroy {
   @Input({ alias: 'pfuLoading' }) isLoading = false;
 
-  private readonly documentRef = inject(DOCUMENT);
+  private readonly documentRef: Document;
   private overlayElement?: HTMLElement;
   private spinnerElement?: HTMLElement;
   private previousPosition?: string | null;
@@ -25,8 +25,11 @@ export class LoadingDirective implements OnChanges, OnDestroy {
 
   constructor(
     private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly renderer: Renderer2
-  ) {}
+    private readonly renderer: Renderer2,
+    @Inject(DOCUMENT) documentRef: Document
+  ) {
+    this.documentRef = documentRef;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['isLoading']) {
@@ -134,7 +137,9 @@ export class LoadingDirective implements OnChanges, OnDestroy {
           }
         `)
       );
-      this.renderer.appendChild(this.documentRef.head, styleElement);
+      if (this.documentRef.head) {
+        this.renderer.appendChild(this.documentRef.head, styleElement);
+      }
     }
   }
 }
