@@ -188,7 +188,7 @@ Estrutura:
 Comportamento esperado:
 
 - o valor do `FormControl` deve continuar numerico;
-- a formatacao visual deve ficar sob responsabilidade do `p-inputNumber`.
+- a formatacao visual deve ficar sob responsabilidade do `p-input-number`.
 
 ## Campo percentual
 
@@ -204,7 +204,7 @@ Estrutura:
 Comportamento esperado:
 
 - o valor do `FormControl` deve continuar numerico;
-- a apresentacao visual deve usar `p-inputNumber`.
+- a apresentacao visual deve usar `p-input-number`.
 
 ## Campo de data UTC
 

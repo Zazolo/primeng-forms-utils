@@ -10,7 +10,7 @@ Centralizar a definicao de campos, validacoes, layout e saida de valor em uma co
 
 - monta ou complementa um `FormGroup`;
 - aplica validacoes declarativas e validadores Angular customizados;
-- renderiza os componentes PrimeNG atuais, como `p-select`, `p-datepicker`, `pTextarea` e `p-inputNumber`;
+- renderiza os componentes PrimeNG atuais, como `p-select`, `p-datepicker`, `pTextarea` e `p-input-number`;
 - organiza os campos em grid de 12 colunas responsivo;
 - suporta labels acima ou ao lado do campo;
 - exibe asterisco antes da label quando o campo for obrigatorio;

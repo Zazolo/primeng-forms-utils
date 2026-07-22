@@ -110,6 +110,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
 
     this.items.set(items);
-    this.pageTitle.set(items.at(-1)?.label ?? '');
+    this.pageTitle.set(items[items.length - 1]?.label ?? '');
   }
 }

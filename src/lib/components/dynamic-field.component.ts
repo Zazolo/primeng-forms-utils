@@ -98,7 +98,7 @@ import {
             [readOnly]="field.readonly ?? false"
           />
 
-          <p-inputNumber
+          <p-input-number
             *ngSwitchCase="'number'"
             [inputId]="field.inputId ?? field.name"
             [formControlName]="field.name"
@@ -107,7 +107,7 @@ import {
             [useGrouping]="false"
           />
 
-          <p-inputNumber
+          <p-input-number
             *ngSwitchCase="'money'"
             [inputId]="field.inputId ?? field.name"
             [formControlName]="field.name"
@@ -123,7 +123,7 @@ import {
             [suffix]="field.moneyConfig?.suffix"
           />
 
-          <p-inputNumber
+          <p-input-number
             *ngSwitchCase="'percent'"
             [inputId]="field.inputId ?? field.name"
             [formControlName]="field.name"
@@ -165,7 +165,7 @@ import {
             optionLabel="label"
             optionValue="value"
           >
-            <ng-template pTemplate="selectedItem" let-selectedOption>
+            <ng-template #selectedItem let-selectedOption>
               <div class="pfu-option" *ngIf="selectedOption">
                 <span
                   *ngIf="showEnumIcons && selectedOption.icon"
@@ -179,7 +179,7 @@ import {
               </span>
             </ng-template>
 
-            <ng-template pTemplate="item" let-option>
+            <ng-template #item let-option>
               <div class="pfu-option">
                 <span
                   *ngIf="showEnumIcons && option.icon"
@@ -212,7 +212,7 @@ import {
                 let optionIndex = index
               "
             >
-              <p-radioButton
+              <p-radio-button
                 [inputId]="resolveOptionInputId(optionIndex)"
                 [formControlName]="field.name"
                 [value]="option.value"

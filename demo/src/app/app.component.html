@@ -24,7 +24,7 @@
 
   <section class="showcase-grid">
     <p-card class="form-card">
-      <ng-template pTemplate="header">
+      <ng-template #header>
         <div class="card-header">
           <div>
             <small>Formulario configurado por TypeScript</small>
@@ -50,7 +50,7 @@
 
     <aside class="sidebar">
       <p-card>
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <div class="card-header compact">
             <div>
               <small>O que validar</small>
@@ -65,7 +65,7 @@
       </p-card>
 
       <p-card>
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <div class="card-header compact">
             <div>
               <small>Payload atual</small>
@@ -78,7 +78,7 @@
       </p-card>
 
       <p-card *ngIf="submittedPayload() as payload">
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <div class="card-header compact">
             <div>
               <small>Ultimo submit valido</small>

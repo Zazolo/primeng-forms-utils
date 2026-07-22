@@ -2,12 +2,12 @@ import { DOCUMENT } from '@angular/common';
 import {
   Directive,
   ElementRef,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
   Renderer2,
-  SimpleChanges
+  SimpleChanges,
+  inject
 } from '@angular/core';
 
 @Directive({
@@ -17,19 +17,13 @@ import {
 export class LoadingDirective implements OnChanges, OnDestroy {
   @Input({ alias: 'pfuLoading' }) isLoading = false;
 
-  private readonly documentRef: Document;
+  private readonly documentRef = inject(DOCUMENT);
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly renderer = inject(Renderer2);
   private overlayElement?: HTMLElement;
   private spinnerElement?: HTMLElement;
   private previousPosition?: string | null;
   private positionManagedByDirective = false;
-
-  constructor(
-    private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly renderer: Renderer2,
-    @Inject(DOCUMENT) documentRef: Document
-  ) {
-    this.documentRef = documentRef;
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['isLoading']) {

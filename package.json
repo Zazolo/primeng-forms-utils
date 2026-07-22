@@ -1,6 +1,6 @@
 {
   "name": "primeng-forms-utils",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Angular utility library for dynamic forms built on top of PrimeNG.",
   "keywords": [
     "angular",
@@ -12,20 +12,6 @@
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
-  "main": "./dist/fesm2022/primeng-forms-utils.mjs",
-  "module": "./dist/fesm2022/primeng-forms-utils.mjs",
-  "types": "./dist/types/primeng-forms-utils.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/primeng-forms-utils.d.ts",
-      "default": "./dist/fesm2022/primeng-forms-utils.mjs"
-    }
-  },
-  "files": [
-    "dist",
-    "src",
-    "demo"
-  ],
   "scripts": {
     "build": "ng-packagr -p ng-package.json",
     "build:demo": "ng build demo-showcase",
@@ -33,32 +19,32 @@
     "watch:demo": "ng build demo-showcase --watch"
   },
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/compiler": "^21.0.0",
-    "@angular/core": "^21.0.0",
-    "@angular/forms": "^21.0.0",
-    "@angular/router": "^21.0.0",
-    "primeng": "^21.0.0"
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "primeng": "^22.0.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^21.2.11",
-    "@angular/animations": "^21.2.0",
-    "@angular/cdk": "^21.2.11",
-    "@angular/cli": "^21.2.11",
-    "@angular/common": "^21.2.0",
-    "@angular/compiler": "^21.2.0",
-    "@angular/compiler-cli": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "@angular/forms": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
-    "@angular/router": "^21.2.0",
-    "@primeng/themes": "^21.0.0",
-    "ng-packagr": "^21.0.0",
-    "primeicons": "^7.0.0",
-    "primeng": "^21.0.0",
-    "rxjs": "^7.8.1",
+    "@angular/build": "^22.0.7",
+    "@angular/animations": "^22.0.7",
+    "@angular/cdk": "^22.0.5",
+    "@angular/cli": "^22.0.7",
+    "@angular/common": "^22.0.7",
+    "@angular/compiler": "^22.0.7",
+    "@angular/compiler-cli": "^22.0.7",
+    "@angular/core": "^22.0.7",
+    "@angular/forms": "^22.0.7",
+    "@angular/platform-browser": "^22.0.7",
+    "@angular/router": "^22.0.7",
+    "@primeuix/themes": "^3.0.0",
+    "ng-packagr": "^22.0.1",
+    "primeicons": "^8.0.0",
+    "primeng": "^22.0.0",
+    "rxjs": "^7.8.2",
     "tslib": "^2.8.1",
-    "typescript": "~5.9.2",
-    "zone.js": "~0.15.1"
+    "typescript": "~6.0.0",
+    "zone.js": "~0.16.2"
   }
 }
